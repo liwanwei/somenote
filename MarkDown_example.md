@@ -226,7 +226,7 @@ I get 10 times more traffic from [Google][1] than from [Yahoo][2] or [MSN][3] or
 hello[^1]
 
 
-[^1]: 你好啊
+[^1]: 这个是其那面的脚注，在前面哦，不管标在哪里都出现在最后面的，不信你点一下
 ### 问题 ###
 - - - 
 **Q1.** MakeDown 实现脚注
@@ -354,3 +354,124 @@ Tags: 数学 英语
 > **？？**好像没效果，编辑器里面没有效果，但是挂到github上就可以显示了
 
 图灵社区的一个学习链接：[MarkDown](http://www.ituring.com.cn/article/504 "MarkDown")
+
+
+
+
+
+
+  
+  
+
+#使用pandoc转换格式#
+
+## windows 下安装pandoc ##
+
+## 切换到工作路径 ##
+1. `cd..`向上一级目录
+2. 根目录下直接输入盘符可以直接切换盘符，如在`C:\`下可以直接输入`H:\`
+3. 检查pandoc是否正确安装可使用`pandoc --version`、`pandoc -v`、`pandoc --help`以及`pandoc -h`
+
+## 常用指令介绍 ##
+
+
+
+
+
+## 查看盘中已有的字体文件 ##
+
+在控制台中输入命令：`fc-list >> C:\fonts.txt`。这样，扫到的字体信息就全部被导入到C盘根目录下的fonts.txt文件中了。
+
+
+## 安装转pdf支持文件 ##
+使用pandoc将其他文件格式的文件转为pdf需要使用[LaTeX](http://www.pandoc.org/installing.html)  
+> For PDF output, you’ll also need to install LaTeX. We recommend MiKTeX.  
+
+[MiKTeX 下载](http://miktex.org/)
+
+## 指定转存pdf时所用编译方式 ##
+pandoc 默认选择的是 pdflatex 方式编译，pdflatex 不支持中文，因此，可以通过在转换时指定 xelatex 编译方式来解决，具体命令如下：
+
+	pandoc filename.md -o filename.pdf --latex-engine=xelatex
+
+## 中文下转pdf下中文不显示问题 ##
+
+打开pdf文件一看，内容都是空白，这是由于中文字体的原因，这个问题，我们可以通过以下两个方法解决。  
+
+1. 在转换时显示指定使用字体，命令如下：`-V mainfont="SimSun"`
+2. 修改编译方式 `--latex-engine=xelatex`
+
+## 中文下转pdf越界问题 ##
+使用模板可以解决 具体步骤为：下载模板，放到同一个文件夹下，然后加入语句`--template=pm-template.latex` “=”号后面为模板名称
+
+## 测试 ##
+
+- 英文转pdf
+
+		pandoc eng.md -o eng.pdf 
+- 中文转pdf  
+
+		pandoc chinese.md  -o chinese.pdf --latex-engine=xelatex  -V mainfont="SimSun"
+		
+- 中文转pdf使用模板  
+	- github上的一个模板
+
+		pandoc alibaba.md  -o alibaba.pdf --latex-engine=xelatex  -V mainfont="SimSun" --template=pm-template.latex  
+	- 大神专治懒癌·l 提供的模板
+
+		pandoc alibaba.md  -o alibaba_chinese.pdf --latex-engine=xelatex  --template=chinese.latex
+
+	NB.专治懒癌·l的模板不需要使用`-V mainfont="SimSun"`参数
+
+- 关于提示 `! Undefined control sequence. l.80 \tightlist`
+
+新版本中增加了tightlist提示，运行时可以在模板中加入声明tightlist相关申明即可。
+
+	\newcommand{\tightlist}{%
+	 \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+详情请参见gym的github [LaTeX writer: Use a declaration for tight lists #1571](https://github.com/jgm/pandoc/pull/1571)
+
+大神github [LiamHuang0205](https://github.com/LiamHuang0205)
+
+		
+
+## 转换pdf常用参数 ##
+
+- `–latex-engine=pdflatex|lualatex|xelatex`
+
+
+	–latex-engine用来指定转换PDF格式时LaTeX引擎，默认情况下是pdflatex，但是由于pdflatex不支持中文，因此需要将引擎设置为xelatex
+
+- `–template=FILE`
+
+    使用FILE指定的文件作为输出文档的自定义模板。可将模板文件放置任意处，只是指定FILE时需要该FILE的路径。
+
+- `–toc, –table-of-contents`
+
+    使用该参数后，会在输出文档开头自动产生文件目录，对于输出格式是man, docbook, slidy, slideous, s5, docx 或者odt的文档，该参数不起任何作用。
+
+- `–toc-depth=NUMBER`
+
+    指定文件目录中包含的章节级别，默认NUMBER=3，表示一级标题、二级标题、三级标题都会被在目录中展示。
+
+- `-V KEY[=VAL], –variable=KEY[:VAL]`
+
+    当渲染standalone模式下文档时，设置模板变量KEY的值为VAL。pandoc会自动设置默认模板中的这些变量，因此该选项这通常在使用–template选项指定自定义模板时有用，如果没有指定VAL值，那么该KEY会被赋予值true。
+
+- `-s, –standalone`
+
+    转换输出文档时会自动加上合适的header和footer(例如standalone HTML, LaTeX, RTF).该选择在转换输出pdf，epub，epub3，fb2，docx，odt格式文件时会被自动设置，因此如果转换输出上述格式文件，则不用显示指定该选项。
+
+-  `-N, –number-sections`
+
+    对于转换输出LaTeX, ConTeXt, HTML, EPUB格式文档时，对文中章节进行编号。默认情况下，文章的章节是不会被编号的。对于使用了class unnumbered 的章节肯定不会被标号，即使使用了–number-sections选项。
+
+## 查看Page layout in latex 文档 ##
+
+在命令行中使用`texdoc fancyhdr`或打开`
+G:\ANEWWIN7\MiKTeX\doc\latex\fancyhdr\fancyhdr.dvi`,前面为安装路径。
+
+
+
+
