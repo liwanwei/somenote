@@ -382,6 +382,16 @@ Tags: 数学 英语
 
 在控制台中输入命令：`fc-list >> C:\fonts.txt`。这样，扫到的字体信息就全部被导入到C盘根目录下的fonts.txt文件中了。
 
+使用`fc-list :lang=zh-cn > C:\font_zh-cn.txt`查看系统中的所有字体  
+详情可参加：[http://liam0205.me/2014/09/08/latex-introduction/](http://liam0205.me/2014/09/08/latex-introduction/)
+
+文件格式为：<字体文件路径>: <字体标示名 1>, <字体表示名 2>:Style=<字体类型>
+如：
+
+	C:/WINDOWS/fonts/simsun.ttc: 宋体,SimSun:style=Regular
+
+出现了之前文档里调用的字体SimSun，此处表明该字体有两个表示名：宋体和SimSun，我们在\setCJKmainfont{·}中填入任意一个都有同样的效果。
+
 
 ## 安装转pdf支持文件 ##
 使用pandoc将其他文件格式的文件转为pdf需要使用[LaTeX](http://www.pandoc.org/installing.html)  
