@@ -1,3 +1,10 @@
+---
+layout: post
+category : jobs
+tagline: "Supporting tagline"
+tags : [java]
+---
+{% include JB/setup %}
 ### 腾讯 ###
 - 岗位职责：   
 	- 1.负责公司核心产品的开发与维护；根据应用领域的实际情况，设计正确、合理的软件构架，维护系统构件及其接口。   
